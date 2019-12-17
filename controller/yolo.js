@@ -124,7 +124,7 @@ router.post('/imageUpload', async (req, res) => {
     const fileName = req.files.file.name;
     try {
         fs.writeFileSync(imgStorageDir + '/' + fileName, file, () => { });
-        const commad = 'cp imageStorage/' + fileName + ' ' + '/Users/wenhaozhao/Desktop/FYP_Demo/yolov3';
+        const commad = 'cp ImageStorage/' + fileName + ' ' + '/Users/wenhaozhao/Desktop/FYP_Demo/yolov3';
         let result = await shellExec(commad);
         //TODO: memory cache to storage image file name
         return res.json(result);

@@ -23,6 +23,52 @@ function shellExec(command) {
         return err
     });
 }
+
+/**
+ * word filter function for output reuslt
+ * @param {*} word 
+ */
+function wordFilter(word)
+{
+    let Word = word.match("([A-Za-z]+)");
+    return Word[1];
+}
+
+
+/**
+ * word count function
+ * @param {*} arr 
+ */
+function wordCount(arr){
+    let sortArr = arr.sort();
+    let newArr = [];
+    for (let i = 0; i < sortArr.length;) {
+        var count = 0;
+        for (let j = i; j < arr.length; j++) {
+          if (arr[i] == arr[j]) {
+            count++;
+          }
+        }
+        newArr.push("Element:"+arr[i]+"   "+"Number:"+count)
+        i += count
+      }
+      return newArr
+}
+
+function getResult(resultOutput)
+{
+    let resultkeyWordArr = []
+
+    for(let i=1;i<resultOutput.length;i++)
+    {
+        let data = wordFilter(resultOutput[i]);
+        resultkeyWordArr.push(data);
+    }
+
+    let result = wordCount(resultkeyWordArr);
+    return result;
+}
+
 //POST: yolo/imageProcess
 router.post('/imageProcess', async (req, res) => {
     try {
@@ -36,13 +82,16 @@ router.post('/imageProcess', async (req, res) => {
         let output = data.output;
         let result = {}
         arr = output.split("\n");
-        let resultOutput = []
+        let Output = []
         for (let i = 5; i < arr.length - 3; i++) {
             //TODO: count and push
-            resultOutput.push(arr[i]);
+            Output.push(arr[i]);
         }
+        console.log(Output);
+        let resultData = getResult(Output);
+        resultData.unshift("Detection complete");
         result.code = data.code;
-        result.output = resultOutput;
+        result.output = resultData;
         return res.json(result);
     } catch (error) {
         return res.json(error);
@@ -84,5 +133,7 @@ router.post('/imageUpload', async (req, res) => {
         return res.json(error);
     }
 });
+
+
 
 module.exports = router;

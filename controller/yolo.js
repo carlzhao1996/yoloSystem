@@ -4,8 +4,11 @@ const shell = require('shelljs');
 const path = require('path');
 const fs = require('fs');
 //Result image path
-const imgDir = path.resolve(__dirname, '../') + '/ResultImages';
-fs.existsSync(imgDir) || fs.mkdirSync(imgDir);
+// const imgDir = path.resolve(__dirname, '../') + '/ResultImages';
+// fs.existsSync(imgDir) || fs.mkdirSync(imgDir);
+//Result public path
+const imgDirPublic = path.resolve(__dirname, '../') + '/public';
+fs.existsSync(imgDirPublic) || fs.mkdirSync(imgDirPublic);
 //Image storage path
 const imgStorageDir = path.resolve(__dirname, '../') + '/ImageStorage';
 fs.existsSync(imgStorageDir) || fs.mkdirSync(imgStorageDir);
@@ -35,6 +38,7 @@ router.post('/imageProcess', async (req, res) => {
         arr = output.split("\n");
         let resultOutput = []
         for (let i = 5; i < arr.length - 3; i++) {
+            //TODO: count and push
             resultOutput.push(arr[i]);
         }
         result.code = data.code;
@@ -50,7 +54,7 @@ router.post('/imageSave', async (req, res) => {
     const file = req.files.image;
     console.log(file);
     try {
-        fs.writeFile(imgDir + '/result.png', file.data, (err) => {
+        fs.writeFile(imgDirPublic + '/result.png', file.data, (err) => {
             if (err) {
                 console.error(err);
                 return res.json(err)

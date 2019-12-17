@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>title</title>
+    <style>
+        . {
+            padding: 0;
+            margin: 0;
+        }
+
+        #container {
+            width: 900px;
+            margin: auto;
+            margin-top: 50px;
+        }
+
+        .header {
+            height: 50px;
+            padding-left: 30px;
+            background-color: #6a6a6a;
+            display: flex;
+            align-items: center;
+            color: white;
+        }
+
+        .body {
+            display: flex;
+            justify-content: space-around;
+            padding-top: 10px;
+            background-color: #e5e5e5;
+            padding-bottom: 10px;
+        }
+
+        .left {
+            width: 400px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .btn {
+            /* border: none; */
+            border: 1px solid #ccc;
+            padding: 5px 20px;
+            align-items: center;
+            outline: none;
+            cursor: pointer;
+        }
+
+        .card-source-image {}
+
+        .btn-group {
+            margin: 0 auto;
+            height: 50px;
+            display: flex;
+            align-items: center;
+        }
+
+        #btn-run {
+            margin-left: 30px;
+        }
+
+        .card {
+            background-color: white;
+            margin-top: 10px;
+            border: 1px solid #ccc;
+        }
+
+        .card-console {
+            height: 50px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 13px;
+        }
+
+        .card-footer {
+            height: 50px;
+            font-size: 8px;
+            padding: 5px 10px;
+            display: flex;
+        }
+
+        .card-footer .logo {
+            align-self: center;
+        }
+
+        .card-footer .footer-text {
+            align-self: flex-end;
+            margin-left: 10px;
+        }
+
+        .right {
+            display: flex;
+            flex-direction: column;
+            width: 400px;
+        }
+
+        .card-result {
+            background-color: white;
+            flex: 1;
+        }
+
+        .result {
+            margin-top: 50px;
+            display: flex;
+            justify-content: space-around;
+            margin-bottom: 50px;
+        }
+
+        .result-state {
+            align-self: center;
+        }
+
+        .result-image {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .result-info {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .list-item {
+            width: 200px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            padding: 0 10px;
+            background: white;
+            font-size: 10px;
+            border: 1px solid #ccc;
+        }
+
+        .list-item:not(:last-child) {
+            margin-bottom: 10px;
+        }
+
+        .title {
+            font-size: 13px;
+        }
+
+        .spot {
+            width: 10px;
+            height: 10px;
+            border-radius: 10px;
+            margin-right: 10px;
+            background-color: orange;
+        }
+
+        #btn-upload {
+            position: relative;
+            overflow: hidden;
+        }
+
+        #upload-input {
+            position: absolute;
+            left: 0;
+            top: 0;
+            right: 0;
+            bottom: 0;
+            outline: none;
+            opacity: 0;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+        }
+
+        .image-wrapper {
+            /* background: red; */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 300px;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="container">
+        <div class="header">
+            <span>Dangerous Goods Object Detection</span>
+        </div>
+        <div class="body">
+            <div class="left">
+                <div class="title">Input Source</div>
+                <div class="card image-wrapper card-source-image">
+                    <img height="250" id="img-source">
+                </div>
+                <div class="btn-group">
+                    <button class="btn" id="btn-upload">Upload
+                        <input id="upload-input" type="file" accept="image/gif,image/jpeg,image/png">
+                    </button>
+                    <button class="btn" id="btn-run">RUN</button>
+                </div>
+                <div class="card card-console" id="console-text">Detection Completed</div>
+                <div class="card card-footer"><img class="logo" width="40" height="40" src="./logo.jpeg" />
+                    <div class="footer-text">Demo for Final Project. Presented by xxx,xxx,xxx,xxx</div>
+                </div>
+            </div>
+            <div class="right">
+                <div class="title">Detection Result</div>
+                <div class="card card-result">
+                    <div class="result-image image-wrapper">
+                        <img height="250" id="img-result">
+                    </div>
+                    <div class="result">
+                        <div class="result-state"><img width="80"  id="img-status" alt=""></div>
+                        <div class="result-info" id="result-info">
+                            <!-- <div class="list-item">
+                                <div class="spot"></div>
+                                <div>Battery:2</div>
+                            </div>
+                            <div class="list-item">
+                                <div class="spot"></div>
+                                <div>Black Nail Lighter:2</div>
+                            </div>
+                            <div class="list-item">
+                                <div class="spot"></div>
+                                <div>Clutery:1</div>
+                            </div> -->
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const oUpload = document.getElementById('upload-input')
+        const oRunBtn = document.getElementById('btn-run')
+        const oConsole = document.getElementById('console-text');
+
+        let file = null;
+
+        let responsive = {}
+        // Object.defineProperties(responsive, 'text', {
+        //     set(value) {
+        //         oConsole.innerText = value;
+        //     }
+        // })
+        Object.defineProperties(responsive, {
+            text: {
+                set(value) {
+                    oConsole.innerText = value
+                }
+            },
+            isLoading: {
+                set(value) {
+                    if (value) {
+                        oConsole.innerText = 'Uploading...'
+                    } else {
+                        oConsole.innerText = 'Upload Completed'
+                    }
+                }
+            },
+            isRunning: {
+                set(value) {
+                    if (value) {
+                        oConsole.innerText = 'Running...'
+                    } else {
+                        oConsole.innerText = 'Detection Completed'
+                    }
+                }
+            }
+        })
+
+        oUpload.addEventListener('change', e => {
+            file = oUpload.files[0]
+            responsive.isLoading = true;
+            const reader = new FileReader
+            reader.readAsDataURL(file)
+            reader.onload = e => {
+                const oImageSource = document.getElementById('img-source');
+                oImageSource.setAttribute('src', e.target.result)
+            }
+
+            const formData = new FormData
+            formData.append('file', file)
+            const xhr = new XMLHttpRequest
+            xhr.onreadystatechange = e => {
+                if (xhr.readyState === 4 && xhr.status === 200) {
+                    console.log(xhr.response)
+                    responsive.isLoading = false
+                }
+            }
+            // xhr.open('POST', 'http://localhost.charlesproxy.com:3000/yolo/imageUpload')
+            xhr.open('POST', '/yolo/imageUpload')
+            xhr.send(formData)
+        });
+
+
+        oRunBtn.addEventListener('click', e => {
+            if (file === null) {
+                responsive.text = 'Please upload a photo first'
+
+                return;
+            }
+
+
+            responsive.isRunning = true
+            const xhr = new XMLHttpRequest
+            const formData = new FormData
+            formData.append('imgName', file.name)
+            xhr.onreadystatechange = e => {
+                if (xhr.readyState === 4 && xhr.status === 200) {
+                    responsive.isRunning = false
+                    const { responseText } = xhr
+
+                    let res = {};
+                    try {
+                        if (typeof responseText == 'string') {
+                            res = JSON.parse(responseText)
+                            if (res.code === 0) {
+                                const { output } = res;
+                                const [numberStr, ...itemArr] = output
+
+                                let innerHTML = ''
+                                for (const item of itemArr) {
+                                    innerHTML += `<div class="list-item">
+                                                    <div class="spot"></div>
+                                                    <div>${item}</div>
+                                                </div>`
+                                }
+
+                                const oResultInfo = document.getElementById('result-info')
+                                oResultInfo.innerHTML = innerHTML
+                                responsive.text = numberStr
+
+                                document.getElementById('img-result').setAttribute('src', './result.png')
+                                document.getElementById('img-status').setAttribute('src', itemArr.length > 0 ? './dangerous.jpeg' : './pass.png')
+                            } else {
+                                responsive.text = 'Parse failed'
+                            }
+                        }
+                    } catch (err) {
+                        responsive.text = 'Response is not a JSON string'
+                    }
+                }
+            }
+            xhr.open('POST', '/yolo/imageProcess')
+            xhr.send(formData)
+        })
+    </script>
+</body>
+
+</html>

@@ -15,6 +15,6 @@
     "morgan": "~1.9.0",
     "multer": "^1.4.2",
     "serve-favicon": "~2.4.5",
-    "shelljs": "^0.8.3"
+    "shelljs": "^0.8.5"
   }
 }
